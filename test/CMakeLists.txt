@@ -1,0 +1,2 @@
+add_executable(nrv_test nrv_test.cpp)
+target_link_libraries(nrv_test PUBLIC NormalRandomVariable)

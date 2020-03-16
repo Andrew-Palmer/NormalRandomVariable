@@ -1,0 +1,3 @@
+add_library(NormalRandomVariable STATIC NormalRandomVariable.cpp)
+
+target_include_directories(NormalRandomVariable PUBLIC include)
