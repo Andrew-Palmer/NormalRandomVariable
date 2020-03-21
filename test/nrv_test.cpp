@@ -1,11 +1,9 @@
-#include <iostream>
+#include <gtest/gtest.h>
 
 #include "NormalRandomVariable.h"
 
-int main(){
-    std::cout << "Hello World!" << std::endl;
 
-    auto test_var = NRV::NormalRandomVariable(1,-1);
-
-    return 0;
+TEST(Instantiation, InvalidVariance){
+    //EXPECT_ANY_THROW(NRV::NormalRandomVariable(1,-1));
+    EXPECT_TRUE(1 == 1);
 }
