@@ -6,21 +6,20 @@ A class implementation of a normal random variable and various operations
 
 Install Google gtest
 
-'''
-sudo apt update
-sudo apt install libgtest-dev
-cd /usr/src/gtest
-sudo cmake CMakeLists.txt
-sudo make
-sudo cp *.a /usr/lib
-'''
+
+    sudo apt update
+    sudo apt install libgtest-dev
+    cd /usr/src/gtest
+    sudo cmake CMakeLists.txt
+    sudo make
+    sudo cp *.a /usr/lib
+
 
 ## Build & Test
 
-'''
-mkdir build
-cd build
-cmake ..
-make
-./test/nrv_test
-'''
+
+    mkdir build
+    cd build
+    cmake ..
+    make
+    ./test/nrv_test
