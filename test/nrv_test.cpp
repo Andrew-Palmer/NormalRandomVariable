@@ -1,6 +1,46 @@
 #include <gtest/gtest.h>
+#include <vector>
+#include <random>
+#include <cmath>
+#include <numeric>
 
 #include "NormalRandomVariable.h"
+
+/**
+ * Samples from the normal random variables and runs them through function number_of_samples times in order
+ * to estimate the resultant distribution
+ */
+NRV::NormalRandomVariable sampler(double (*function)(std::vector<double>), std::vector<NRV::NormalRandomVariable> inputs, unsigned int number_of_samples)
+{
+    // Set up the random number generator and store the distributions for each random variable
+    std::default_random_engine generator;
+    std::vector<std::normal_distribution<double>> distributions;
+    for(const auto& rv : inputs)
+    {
+        distributions.push_back(std::normal_distribution<double>(rv.mean(), std::sqrt(rv.variance())));
+    }
+
+    // Sample the function
+    std::vector<double> results;
+    for(unsigned int i = 0; i < number_of_samples; ++i)
+    {
+        std::vector<double> inputs_sampled;
+        for(auto& distribution : distributions)
+        {
+            inputs_sampled.push_back(distribution(generator));
+        }
+
+        results.push_back(function(inputs_sampled));
+    }
+
+    // Calculate the mean and variance of the results
+    double mean = std::accumulate(results.begin(), results.end(), 0.0, [=](double a, double b) -> double {return a + b / number_of_samples;});
+    double variance = std::accumulate(results.begin(), results.end(), 0.0, [=](double a, double b) -> double {return a + std::pow(b - mean, 2) / number_of_samples;});
+    NRV::NormalRandomVariable output(mean, variance);
+
+    return output;
+}
+
 
 
 TEST(Instantiation, ValidVariance)
@@ -87,3 +127,22 @@ TEST(Subtraction, ThreeRandomVariables)
     EXPECT_DOUBLE_EQ(rv4.mean(), 8);
     EXPECT_DOUBLE_EQ(rv4.variance(), 7);
 }
+
+template<class T>
+T test_func(std::vector<T> inputs)
+{
+    return inputs[0] + inputs[1];
+}
+
+TEST(Sampler, Sampler)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(1, 2));
+    inputs.push_back(NRV::NormalRandomVariable(1, 2));
+    auto sample_output = sampler(test_func<double>, inputs, 1000000);
+    auto calc_output = test_func<NRV::NormalRandomVariable>(inputs);
+
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
+}
+
