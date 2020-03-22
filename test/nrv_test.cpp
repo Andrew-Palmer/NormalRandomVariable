@@ -47,6 +47,16 @@ TEST(Addition, RandomVariableAndConst)
     EXPECT_DOUBLE_EQ(rv2.variance(), 2);
 }
 
+TEST(Addition, ThreeRandomVariables)
+{
+    auto rv1 = NRV::NormalRandomVariable(1,2);
+    auto rv2 = NRV::NormalRandomVariable(3,4);
+    auto rv3 = NRV::NormalRandomVariable(-10,1);
+    auto rv4 = rv1 + rv2 + rv3;
+    EXPECT_DOUBLE_EQ(rv4.mean(), -6);
+    EXPECT_DOUBLE_EQ(rv4.variance(), 7);
+}
+
 TEST(Subtraction, TwoRandomVariables)
 {
     auto rv1 = NRV::NormalRandomVariable(1,2);
@@ -66,4 +76,14 @@ TEST(Subtraction, RandomVariableAndConst)
     rv2 = 12.5 - rv1;
     EXPECT_DOUBLE_EQ(rv2.mean(), 11.5);
     EXPECT_DOUBLE_EQ(rv2.variance(), 2);
+}
+
+TEST(Subtraction, ThreeRandomVariables)
+{
+    auto rv1 = NRV::NormalRandomVariable(1,2);
+    auto rv2 = NRV::NormalRandomVariable(3,4);
+    auto rv3 = NRV::NormalRandomVariable(-10,1);
+    auto rv4 = rv1 - rv2 - rv3;
+    EXPECT_DOUBLE_EQ(rv4.mean(), 8);
+    EXPECT_DOUBLE_EQ(rv4.variance(), 7);
 }
