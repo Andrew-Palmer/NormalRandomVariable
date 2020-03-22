@@ -18,9 +18,33 @@ public:
      */
     NormalRandomVariable(double mean, double variance);
 
+    /**
+     * Get the mean of the random variable
+     */
+    double mean() const;
+
+    /**
+     * Get the variance of the random variable
+     */
+    double variance() const;
+
 private:
     double mean_;
     double variance_;
 };
+
+/**
+ * Addition of 2 random variables, or 1 random variable with a constant
+ */
+NormalRandomVariable operator+(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2);
+NormalRandomVariable operator+(const NormalRandomVariable& rv, double num);
+NormalRandomVariable operator+(double num, const NormalRandomVariable& rv);
+
+/**
+ * Subtraction of 2 random variables, or 1 random variable with a constant
+ */
+NormalRandomVariable operator-(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2);
+NormalRandomVariable operator-(const NormalRandomVariable& rv, double num);
+NormalRandomVariable operator-(double num, const NormalRandomVariable& rv);
 
 } // namespace NRV

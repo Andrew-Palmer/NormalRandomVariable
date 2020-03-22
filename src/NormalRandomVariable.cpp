@@ -19,9 +19,45 @@ NormalRandomVariable::NormalRandomVariable(double mean, double variance)
     }
 }
 
+double NormalRandomVariable::mean() const
+{
+    return mean_;
+}
 
+double NormalRandomVariable::variance() const
+{
+    return variance_;
+}
 
+NormalRandomVariable operator+(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2)
+{
+    return NormalRandomVariable(rv1.mean() + rv2.mean(), rv1.variance() + rv2.variance());
+}
 
+NormalRandomVariable operator+(const NormalRandomVariable& rv, double num)
+{
+    return NormalRandomVariable(rv.mean() + num, rv.variance());
+}
+
+NormalRandomVariable operator+(double num, const NormalRandomVariable& rv)
+{
+    return rv + num;
+}
+
+NormalRandomVariable operator-(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2)
+{
+    return NormalRandomVariable(rv1.mean() - rv2.mean(), rv1.variance() + rv2.variance());
+}
+
+NormalRandomVariable operator-(const NormalRandomVariable& rv, double num)
+{
+    return NormalRandomVariable(rv.mean() - num, rv.variance());
+}
+
+NormalRandomVariable operator-(double num, const NormalRandomVariable& rv)
+{
+    return NormalRandomVariable(num - rv.mean(), rv.variance());
+}
     
 } // namespace NRV
 
