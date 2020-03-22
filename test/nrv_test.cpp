@@ -41,8 +41,6 @@ NRV::NormalRandomVariable sampler(double (*function)(std::vector<double>), std::
     return output;
 }
 
-
-
 TEST(Instantiation, ValidVariance)
 {
     EXPECT_NO_THROW(NRV::NormalRandomVariable(1, 1));
