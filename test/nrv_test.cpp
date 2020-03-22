@@ -129,7 +129,7 @@ TEST(Subtraction, ThreeRandomVariables)
 }
 
 template<class T>
-T test_func(std::vector<T> inputs)
+T addition(std::vector<T> inputs)
 {
     return inputs[0] + inputs[1];
 }
@@ -139,10 +139,60 @@ TEST(Sampler, Sampler)
     std::vector<NRV::NormalRandomVariable> inputs;
     inputs.push_back(NRV::NormalRandomVariable(1, 2));
     inputs.push_back(NRV::NormalRandomVariable(1, 2));
-    auto sample_output = sampler(test_func<double>, inputs, 1000000);
-    auto calc_output = test_func<NRV::NormalRandomVariable>(inputs);
+    auto sample_output = sampler(addition<double>, inputs, 1000000);
+    auto calc_output = addition<NRV::NormalRandomVariable>(inputs);
 
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
 }
 
+template<class T>
+T inverse(std::vector<T> inputs)
+{
+    return 1 / inputs[0];
+}
+
+TEST(Inverse, FarFromZero)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(100, 1));
+    auto calc_output = inputs[0].inverse();
+    auto sample_output = sampler(inverse<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
+}
+
+template<class T>
+T divideRvByNum(std::vector<T> inputs)
+{
+    return 5 / inputs[0];
+}
+
+TEST(Division, DivideNumByRV)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(100, 1));
+    auto calc_output = divideRvByNum<NRV::NormalRandomVariable>(inputs);
+    auto sample_output = sampler(divideRvByNum<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
+}
+
+template<class T>
+T divideNumByRv(std::vector<T> inputs)
+{
+    return inputs[0] / 5;
+}
+
+TEST(Division, DivideRVbyNum)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(100, 1));
+    auto calc_output = divideNumByRv<NRV::NormalRandomVariable>(inputs);
+    auto sample_output = sampler(divideNumByRv<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
+}
