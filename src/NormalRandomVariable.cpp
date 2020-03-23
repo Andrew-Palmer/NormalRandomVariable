@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <cmath>
 
 #include "NormalRandomVariable.h"
 
@@ -27,6 +28,14 @@ double NormalRandomVariable::mean() const
 double NormalRandomVariable::variance() const
 {
     return variance_;
+}
+
+NormalRandomVariable NormalRandomVariable::inverse() const
+{
+    double mean = mean_ / (std::pow(mean_, 2) - variance_);
+    double variance = variance_ / (std::pow(mean_, 4) - 2 * std::pow(mean_, 2) * variance_ + std::pow(variance_, 2));
+
+    return NormalRandomVariable(mean, variance);
 }
 
 NormalRandomVariable operator+(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2)
@@ -58,6 +67,18 @@ NormalRandomVariable operator-(double num, const NormalRandomVariable& rv)
 {
     return NormalRandomVariable(num - rv.mean(), rv.variance());
 }
+
+NormalRandomVariable operator/(const NormalRandomVariable& rv, double num)
+{
+    return NormalRandomVariable(rv.mean() / num, rv.variance() / std::pow(num, 2));
+}
+
+NormalRandomVariable operator/(double num, const NormalRandomVariable& rv)
+{
+    auto inverse = rv.inverse();
+    return NormalRandomVariable(inverse.mean() * num, inverse.variance() * std::pow(num, 2));
+}
+
     
 } // namespace NRV
 
