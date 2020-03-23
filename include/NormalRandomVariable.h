@@ -59,9 +59,22 @@ NormalRandomVariable operator/(const NormalRandomVariable& rv, double num);
 NormalRandomVariable operator/(double num, const NormalRandomVariable& rv);
 
 /**
+ * Division of 2 random variables
+ * Note: The approximation used has very strict rules on when it is valid. Outside of these
+ * rules (i.e., when the variance of rv1 becomes too small), the distribution approaches
+ * simply division of the mean of rv1 by the random variable rv2. 
+ */
+NormalRandomVariable operator/(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2);
+
+/**
  * Multiplication of random variable with a constant
  */
 NormalRandomVariable operator*(const NormalRandomVariable& rv, double num);
 NormalRandomVariable operator*(double num, const NormalRandomVariable& rv);
+
+/**
+ * Multiplication of 2 random variables
+ */
+NormalRandomVariable operator*(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2);
 
 } // namespace NRV

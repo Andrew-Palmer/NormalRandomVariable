@@ -3,6 +3,7 @@ A class implementation of a normal random variable and various operations (under
 
 - addition and subtraction (with both normal random variables and constants)
 - inverse
+- multiplication and division (with both normal random variables and constants)
 
 Note: This implementation does not model covariance, and it is up to the user to ensure that the random variables, and equations of random variables, are independent. 
 

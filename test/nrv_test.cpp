@@ -196,6 +196,34 @@ TEST(Division, DivideRVbyNum)
 }
 
 template<class T>
+T divideRvByRv(std::vector<T> inputs)
+{
+    return inputs[0] /inputs[1];
+}
+
+TEST(Division, DivideRVbyRV)
+{
+    // First check with distributions that fulfill the approximation requirements
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(10, 25));
+    inputs.push_back(NRV::NormalRandomVariable(5, 1));
+    auto calc_output = divideRvByRv<NRV::NormalRandomVariable>(inputs);
+    auto sample_output = sampler(divideRvByRv<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
+
+    // Then check what happens if it isn't fulfilled
+    inputs[0] = NRV::NormalRandomVariable(10, 1);
+    calc_output = divideRvByRv<NRV::NormalRandomVariable>(inputs);
+    sample_output = sampler(divideRvByRv<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
+}
+
+
+template<class T>
 T multiplyRvByNum(std::vector<T> inputs)
 {
     return inputs[0] * 0.2;
@@ -227,4 +255,24 @@ TEST(Multiplication, MultiplyNumbyRV)
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
+}
+
+template<class T>
+T multiplyRvByRv(std::vector<T> inputs)
+{
+    return inputs[0] * inputs[1];
+}
+
+TEST(Multiplication, MultiplyRVbyRV)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(10, 0.5));
+    inputs.push_back(NRV::NormalRandomVariable(20, 0.2));
+    auto calc_output = multiplyRvByRv<NRV::NormalRandomVariable>(inputs);
+    auto sample_output = sampler(multiplyRvByRv<double>, inputs, 1000000);
+    
+    // Note: needed to relax the threshold for saying that they are near because the
+    // multiplication magnifies sampling error
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.1); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.1); 
 }
