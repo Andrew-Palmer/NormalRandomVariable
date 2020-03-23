@@ -79,6 +79,15 @@ NormalRandomVariable operator/(double num, const NormalRandomVariable& rv)
     return NormalRandomVariable(inverse.mean() * num, inverse.variance() * std::pow(num, 2));
 }
 
+NormalRandomVariable operator*(const NormalRandomVariable& rv, double num)
+{
+    return NormalRandomVariable(rv.mean() * num, rv.variance() * std::pow(num, 2));
+}
+
+NormalRandomVariable operator*(double num, const NormalRandomVariable& rv)
+{
+    return NormalRandomVariable(rv.mean() * num, rv.variance() * std::pow(num, 2));
+}
     
 } // namespace NRV
 

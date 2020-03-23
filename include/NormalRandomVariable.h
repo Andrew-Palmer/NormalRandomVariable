@@ -58,4 +58,10 @@ NormalRandomVariable operator-(double num, const NormalRandomVariable& rv);
 NormalRandomVariable operator/(const NormalRandomVariable& rv, double num);
 NormalRandomVariable operator/(double num, const NormalRandomVariable& rv);
 
+/**
+ * Multiplication of random variable with a constant
+ */
+NormalRandomVariable operator*(const NormalRandomVariable& rv, double num);
+NormalRandomVariable operator*(double num, const NormalRandomVariable& rv);
+
 } // namespace NRV

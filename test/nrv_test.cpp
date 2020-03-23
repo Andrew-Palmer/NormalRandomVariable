@@ -194,3 +194,37 @@ TEST(Division, DivideRVbyNum)
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
 }
+
+template<class T>
+T multiplyRvByNum(std::vector<T> inputs)
+{
+    return inputs[0] * 0.2;
+}
+
+TEST(Multiplication, MultiplyRVbyNum)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(100, 1));
+    auto calc_output = multiplyRvByNum<NRV::NormalRandomVariable>(inputs);
+    auto sample_output = sampler(multiplyRvByNum<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
+}
+
+template<class T>
+T multiplyNumByRv(std::vector<T> inputs)
+{
+    return 0.2 * inputs[0];
+}
+
+TEST(Multiplication, MultiplyNumbyRV)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(100, 1));
+    auto calc_output = multiplyNumByRv<NRV::NormalRandomVariable>(inputs);
+    auto sample_output = sampler(multiplyNumByRv<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
+}
