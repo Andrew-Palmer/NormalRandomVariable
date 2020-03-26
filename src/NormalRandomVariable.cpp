@@ -32,6 +32,12 @@ double NormalRandomVariable::variance() const
 
 NormalRandomVariable NormalRandomVariable::inverse() const
 {
+    // This approximation is breaks down if the distribution is too close to 0. Set an arbitrary limit of 4 sigma. 
+    if(mean_ / std::sqrt(variance_) < 4)
+    {
+        throw std::range_error("NormalRandomVariable: Variance of denominator is too large to allow approximation of division operator");
+    }
+
     double mean = mean_ / (std::pow(mean_, 2) - variance_);
     double variance = variance_ / (std::pow(mean_, 4) - 2 * std::pow(mean_, 2) * variance_ + std::pow(variance_, 2));
 
@@ -85,7 +91,7 @@ NormalRandomVariable operator/(const NormalRandomVariable& rv1, const NormalRand
     double b = rv2.mean() / std::sqrt(rv2.variance());
 
     // Check that the conditions for the approximation are met
-    if(a < 2.5 && b > 4)
+    if(a < 2.5 && b >= 4)
     {
         double r = rv2.variance() / rv1.variance();
         double mean = a / (std::sqrt(r) * (1.01 * b - 0.2713));
@@ -95,7 +101,7 @@ NormalRandomVariable operator/(const NormalRandomVariable& rv1, const NormalRand
     }
     else
     {
-        // Otherwise, approximate it multiplying rv1 by the inverse of rv2
+        // Otherwise, approximate it by multiplying rv1 by the inverse of rv2
         return rv1 * rv2.inverse();
     }
 }

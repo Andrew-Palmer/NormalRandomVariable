@@ -161,6 +161,13 @@ TEST(Inverse, FarFromZero)
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
 }
 
+TEST(Inverse, CloseToZero)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(1, 1));
+    EXPECT_ANY_THROW(inputs[0].inverse());
+}
+
 template<class T>
 T divideNumByRv(std::vector<T> inputs)
 {
@@ -213,13 +220,19 @@ TEST(Division, DivideRVbyRV)
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.1); // Higher threshold for variance
 
-    // Then check what happens if it isn't fulfilled
+    // Then check what happens if the numerator has a lower variance
     inputs[0] = NRV::NormalRandomVariable(10, 1);
     calc_output = divideRvByRv<NRV::NormalRandomVariable>(inputs);
     sample_output = sampler(divideRvByRv<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.1); // Higher threshold for variance
+
+     // Then check what happens if the denominator has too high variance
+     // Note: this would result in a multi-modal distribution and cannot be handled
+    inputs[0] = NRV::NormalRandomVariable(10, 25);
+    inputs[1] = NRV::NormalRandomVariable(5, 2);
+    EXPECT_ANY_THROW(divideRvByRv<NRV::NormalRandomVariable>(inputs));
 }
 
 
