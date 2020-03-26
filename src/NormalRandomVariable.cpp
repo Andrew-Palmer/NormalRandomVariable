@@ -81,13 +81,13 @@ NormalRandomVariable operator/(double num, const NormalRandomVariable& rv)
 
 NormalRandomVariable operator/(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2)
 {
-    double r = rv2.variance() / rv1.variance();
     double a = rv1.mean() / std::sqrt(rv1.variance());
     double b = rv2.mean() / std::sqrt(rv2.variance());
 
     // Check that the conditions for the approximation are met
     if(a < 2.5 && b > 4)
     {
+        double r = rv2.variance() / rv1.variance();
         double mean = a / (std::sqrt(r) * (1.01 * b - 0.2713));
         double variance = (std::pow(a, 2) + 1) / (r * (std::pow(b, 2) + 0.108 * b - 3.795)) - std::pow(mean, 2);
 
@@ -95,8 +95,8 @@ NormalRandomVariable operator/(const NormalRandomVariable& rv1, const NormalRand
     }
     else
     {
-        // Otherwise, approximate it dividing the mean of rv1 by rv2
-        return rv1.mean() / rv2;
+        // Otherwise, approximate it multiplying rv1 by the inverse of rv2
+        return rv1 * rv2.inverse();
     }
 }
 

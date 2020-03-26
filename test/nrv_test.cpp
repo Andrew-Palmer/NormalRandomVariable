@@ -211,7 +211,7 @@ TEST(Division, DivideRVbyRV)
     auto sample_output = sampler(divideRvByRv<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
-    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.1); // Higher threshold for variance
 
     // Then check what happens if it isn't fulfilled
     inputs[0] = NRV::NormalRandomVariable(10, 1);
@@ -219,7 +219,7 @@ TEST(Division, DivideRVbyRV)
     sample_output = sampler(divideRvByRv<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.01);
-    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.01);
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.1); // Higher threshold for variance
 }
 
 
