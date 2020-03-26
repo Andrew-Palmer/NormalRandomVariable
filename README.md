@@ -29,7 +29,7 @@ Install Google gtest
     cd build
     cmake ..
     make
-    ./test/nrv_test
+    make test ARGS="-V"
 
 ## References
 

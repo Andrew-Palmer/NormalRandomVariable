@@ -11,3 +11,10 @@ include_directories(include)
 
 add_subdirectory(src)
 add_subdirectory(test)
+
+enable_testing()
+
+add_test(
+    NAME nrv_test
+    COMMAND nrv_test
+)
