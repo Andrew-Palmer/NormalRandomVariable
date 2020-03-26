@@ -33,6 +33,17 @@ public:
      */
     NormalRandomVariable inverse() const;
 
+    /**
+     * Returns a rectified normal variable between lower and upper bounds
+     */
+    NormalRandomVariable rectify(double lower, double upper) const;
+    
+    /**
+     * Returns a rectified normal variable, rectified using a lower bound of 0
+     */
+    NormalRandomVariable rectify() const;
+
+
 private:
     double mean_;
     double variance_;
