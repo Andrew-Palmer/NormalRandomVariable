@@ -30,12 +30,20 @@ NRV::NormalRandomVariable sampler(double (*function)(std::vector<double>), std::
             inputs_sampled.push_back(distribution(generator));
         }
 
-        results.push_back(function(inputs_sampled));
+        // Use a try-catch block to handle cases where the function should not actually return a result
+        try
+        {
+            results.push_back(function(inputs_sampled));
+        }
+        catch (...)
+        {
+            // Do nothing
+        }
     }
 
     // Calculate the mean and variance of the results
-    double mean = std::accumulate(results.begin(), results.end(), 0.0, [=](double a, double b) -> double {return a + b / number_of_samples;});
-    double variance = std::accumulate(results.begin(), results.end(), 0.0, [=](double a, double b) -> double {return a + std::pow(b - mean, 2) / number_of_samples;});
+    double mean = std::accumulate(results.begin(), results.end(), 0.0, [=](double a, double b) -> double {return a + b / results.size();});
+    double variance = std::accumulate(results.begin(), results.end(), 0.0, [=](double a, double b) -> double {return a + std::pow(b - mean, 2) / results.size();});
     NRV::NormalRandomVariable output(mean, variance);
 
     return output;
@@ -361,6 +369,50 @@ TEST(Rectification, RectificationWithLowerZero)
     inputs[0] = NRV::NormalRandomVariable(0, 0.5);
     calc_output = inputs[0].rectify();
     sample_output = sampler(rectify_zero<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+}
+
+template<class T>
+T truncate(std::vector<T> inputs)
+{
+    // Use a lower bound of 0 and an upper bound of 10
+    if(inputs[0] < 0)
+    {
+        throw "Outside of bounds";
+    }
+    if(inputs[0] > 10)
+    {
+        throw "Outside of bounds";
+    }
+
+    return inputs[0];
+}
+
+TEST(Truncation, TruncationWithUpperAndLower)
+{
+    // Try close to the upper bound
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(10, 0.5));
+    auto calc_output = inputs[0].truncate(0, 10);
+    auto sample_output = sampler(truncate<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+
+    // Try close to the lower bound
+    inputs[0] = NRV::NormalRandomVariable(0, 0.5);
+    calc_output = inputs[0].truncate(0, 10);
+    sample_output = sampler(truncate<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+
+    // Try close to both the upper and lower bounds
+    inputs[0] = NRV::NormalRandomVariable(5, 10);
+    calc_output = inputs[0].truncate(0, 10);
+    sample_output = sampler(truncate<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 

@@ -6,8 +6,10 @@
 
 namespace NRV {
 
+const double one_on_sqrt_pi = 1 / std::sqrt(3.14159265358979323846);
 const double one_on_sqrt_two_pi = 1 / std::sqrt(2 * 3.14159265358979323846);
 const double one_on_sqrt_two = 1 / std::sqrt(2);
+const double sqrt_2 = std::sqrt(2);
 
 NormalRandomVariable::NormalRandomVariable()
 : mean_(0), variance_(1)
@@ -50,8 +52,10 @@ NormalRandomVariable NormalRandomVariable::inverse() const
 
 NormalRandomVariable NormalRandomVariable::rectify(double lower, double upper) const
 {
-    double c = (lower - mean_) / std::sqrt(variance_);
-    double d = (upper - mean_) / std::sqrt(variance_);
+    double sqrt_variance = std::sqrt(variance_);
+
+    double c = (lower - mean_) / sqrt_variance;
+    double d = (upper - mean_) / sqrt_variance;
 
     double m = one_on_sqrt_two_pi * (std::exp(-c * c / 2) - std::exp(-d * d / 2)) 
             + (c / 2) * (1 + std::erf(c * one_on_sqrt_two)) 
@@ -61,13 +65,15 @@ NormalRandomVariable NormalRandomVariable::rectify(double lower, double upper) c
             + ((c - m) * (c - m) / 2) * (1 + std::erf(c * one_on_sqrt_two))
             + ((d - m) * (d - m) / 2) * (1 - std::erf(d * one_on_sqrt_two));
 
-    return NormalRandomVariable(m * std::sqrt(variance_) + mean_, v * variance_);
+    return NormalRandomVariable(m * sqrt_variance + mean_, v * variance_);
 }
 
 NormalRandomVariable NormalRandomVariable::rectify() const
 {
+    double sqrt_variance = std::sqrt(variance_);
+
     // Use only a lower bound of 0
-    double c = -mean_ / std::sqrt(variance_);
+    double c = -mean_ / sqrt_variance;
 
     double m = one_on_sqrt_two_pi * (std::exp(-c * c / 2)) 
             + (c / 2) * (1 + std::erf(c * one_on_sqrt_two));
@@ -75,7 +81,22 @@ NormalRandomVariable NormalRandomVariable::rectify() const
             - one_on_sqrt_two_pi * (-std::exp(-c * c / 2) * (c - 2 * m))
             + ((c - m) * (c - m) / 2) * (1 + std::erf(c * one_on_sqrt_two));
 
-    return NormalRandomVariable(m * std::sqrt(variance_) + mean_, v * variance_);
+    return NormalRandomVariable(m * sqrt_variance + mean_, v * variance_);
+}
+
+NormalRandomVariable NormalRandomVariable::truncate(double lower, double upper) const
+{
+    double sqrt_variance = std::sqrt(variance_);
+
+    // First transform the bounds to be acting on a standard normal distribution
+    double c = (lower - mean_) / sqrt_variance;
+    double d = (upper - mean_) / sqrt_variance;
+
+    double alpha = sqrt_2 * one_on_sqrt_pi / (std::erf(d * one_on_sqrt_two) - std::erf(c * one_on_sqrt_two));
+    double m = alpha * (std::exp(-c * c / 2) - std::exp(-d * d / 2));
+    double v = alpha * (std::exp(-c * c / 2) * (c - 2 * m) - std::exp(-d * d / 2) * (d - 2 * m)) + m * m + 1;
+
+    return NormalRandomVariable(m * sqrt_variance + mean_, v * variance_);
 }
 
 NormalRandomVariable operator+(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2)
