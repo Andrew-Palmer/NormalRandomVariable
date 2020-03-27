@@ -48,6 +48,11 @@ public:
      */
     NormalRandomVariable truncate(double lower, double upper) const;
 
+    /**
+     * Returns a truncated normal variable between the lower and upper bounds
+     */
+    NormalRandomVariable truncate(NormalRandomVariable lower, NormalRandomVariable upper) const;
+
 
 private:
     double mean_;

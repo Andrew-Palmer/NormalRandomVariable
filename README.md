@@ -38,4 +38,5 @@ Install Google gtest
 The approximations used for the various operations are presented in the following papers:
 
 - Palmer, A. W., Hill, A. J., & Scheding, S. J. (2017). Methods for Stochastic Collection and Replenishment (SCAR) optimisation for persistent autonomy. _Robotics and Autonomous Systems_, 87, 51-65.
+- Palmer, A. W., Hill, A. J., & Scheding, S. J. (2018, May). Modelling resource contention in multi-robot task allocation problems with uncertain timing. In _2018 IEEE International Conference on Robotics and Automation (ICRA)_ (pp. 1-8). IEEE.
 - Simon, D., & Simon, D. L. (2010). Constrained Kalman filtering via density function truncation for turbofan engine health estimation. _International Journal of Systems Science, 41(2)_, 159-171.
