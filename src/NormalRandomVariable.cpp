@@ -86,6 +86,11 @@ NormalRandomVariable NormalRandomVariable::rectify() const
 
 NormalRandomVariable NormalRandomVariable::truncate(double lower, double upper) const
 {
+    if(upper <= lower)
+    {
+        throw std::range_error("NormalRandomVariable: Truncation lower bound must be less than upper bound");
+    }
+
     double sqrt_variance = std::sqrt(variance_);
 
     // First transform the bounds to be acting on a standard normal distribution

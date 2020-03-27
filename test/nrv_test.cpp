@@ -417,3 +417,12 @@ TEST(Truncation, TruncationWithUpperAndLower)
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
 }
+
+TEST(Truncation, TruncationWithInvalidBounds)
+{
+    // Try close to the upper bound
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(10, 0.5));
+    EXPECT_ANY_THROW(inputs[0].truncate(10, 5));
+    EXPECT_ANY_THROW(inputs[0].truncate(10, 10));
+}
