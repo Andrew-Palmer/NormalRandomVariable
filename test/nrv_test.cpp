@@ -351,7 +351,7 @@ TEST(Rectification, RectificationWithUpperAndLower)
 }
 
 template<class T>
-T rectifyZero(std::vector<T> inputs)
+T rectifyLower(std::vector<T> inputs)
 {
     // Use a lower bound of 0
     if(inputs[0] < 0)
@@ -362,13 +362,13 @@ T rectifyZero(std::vector<T> inputs)
     return inputs[0];
 }
 
-TEST(Rectification, RectificationWithLowerZero)
+TEST(Rectification, RectificationWithLower)
 {
     // Try far from the lower bound
     std::vector<NRV::NormalRandomVariable> inputs;
     inputs.push_back(NRV::NormalRandomVariable(10, 0.5));
     auto calc_output = inputs[0].rectifyLower(0);
-    auto sample_output = sampler(rectifyZero<double>, inputs, 1000000);
+    auto sample_output = sampler(rectifyLower<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
@@ -376,7 +376,39 @@ TEST(Rectification, RectificationWithLowerZero)
     // Try close to the lower bound
     inputs[0] = NRV::NormalRandomVariable(0, 0.5);
     calc_output = inputs[0].rectifyLower(0);
-    sample_output = sampler(rectifyZero<double>, inputs, 1000000);
+    sample_output = sampler(rectifyLower<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+}
+
+template<class T>
+T rectifyUpper(std::vector<T> inputs)
+{
+    // Use a lower bound of 0
+    if(inputs[0] > 10)
+    {
+        return 10;
+    }
+
+    return inputs[0];
+}
+
+TEST(Rectification, RectificationWithUpper)
+{
+    // Try at the upper bound
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(10, 0.5));
+    auto calc_output = inputs[0].rectifyUpper(10);
+    auto sample_output = sampler(rectifyUpper<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+
+    // Try far from the upper bound
+    inputs[0] = NRV::NormalRandomVariable(0, 0.5);
+    calc_output = inputs[0].rectifyUpper(10);
+    sample_output = sampler(rectifyUpper<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
