@@ -37,11 +37,46 @@ public:
      * Returns a rectified normal variable between lower and upper bounds
      */
     NormalRandomVariable rectify(double lower, double upper) const;
-    
+
     /**
-     * Returns a rectified normal variable, rectified using a lower bound of 0
+     * Returns a rectified normal variable above the lower bound
      */
-    NormalRandomVariable rectify() const;
+    NormalRandomVariable rectifyLower(double lower) const;
+
+    /**
+     * Returns a rectified normal variable below the upper bound
+     */
+    NormalRandomVariable rectifyUpper(double upper) const;
+
+    /**
+     * Returns a truncated normal variable between the lower and upper bounds
+     */
+    NormalRandomVariable truncate(double lower, double upper) const;
+
+    /**
+     * Returns a truncated normal variable above the lower bound
+     */
+    NormalRandomVariable truncateLower(double lower) const;
+
+    /**
+     * Returns a truncated normal variable under the upper bound
+     */
+    NormalRandomVariable truncateUpper(double upper) const;
+
+    /**
+     * Returns a truncated normal variable between the lower and upper bounds
+     */
+    NormalRandomVariable truncate(NormalRandomVariable lower, NormalRandomVariable upper) const;
+
+    /**
+     * Returns a truncated normal variable above the lower bound
+     */
+    NormalRandomVariable truncateLower(NormalRandomVariable lower) const;
+
+    /**
+     * Returns a truncated normal variable under the upper bound
+     */
+    NormalRandomVariable truncateUpper(NormalRandomVariable upper) const;
 
 
 private:
@@ -62,6 +97,11 @@ NormalRandomVariable operator+(double num, const NormalRandomVariable& rv);
 NormalRandomVariable operator-(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2);
 NormalRandomVariable operator-(const NormalRandomVariable& rv, double num);
 NormalRandomVariable operator-(double num, const NormalRandomVariable& rv);
+
+/**
+ * Negation
+ */
+NormalRandomVariable operator-(const NormalRandomVariable& rv);
 
 /**
  * Division of random variable with a constant
