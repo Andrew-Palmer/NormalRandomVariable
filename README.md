@@ -14,7 +14,16 @@ A class implementation of a normal random variable and various operations (under
 
 Note: This implementation does not model covariance, and it is up to the user to ensure that the random variables, and equations of random variables, are independent. 
 
-## Dependencies
+## Building
+
+    mkdir build
+    cd build
+    cmake ..
+    make
+
+## Testing
+
+A number of tests have been implemented that use Monte Carlo simulation to verify that the approximations are performing correctly. 
 
 Install Google gtest
 
@@ -25,12 +34,11 @@ Install Google gtest
     sudo make
     sudo cp *.a /usr/lib
 
-
-## Build & Test
+Enable testing when building and run the test
 
     mkdir build
     cd build
-    cmake ..
+    cmake -DBUILD_TESTS=ON ..
     make
     make test ARGS="-V"
 
