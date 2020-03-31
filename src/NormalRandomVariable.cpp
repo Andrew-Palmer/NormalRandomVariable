@@ -106,6 +106,25 @@ NormalRandomVariable NormalRandomVariable::truncate(double lower, double upper) 
     return NormalRandomVariable(m * sqrt_variance + mean_, v * variance_);
 }
 
+NormalRandomVariable NormalRandomVariable::truncateLower(double lower) const
+{
+    double sqrt_variance = std::sqrt(variance_);
+
+    // First transform the bound to be acting on a standard normal distribution
+    double c = (lower - mean_) / sqrt_variance;
+
+    double alpha = sqrt_2 * one_on_sqrt_pi / (1 - std::erf(c * one_on_sqrt_two));
+    double m = alpha * std::exp(-c * c / 2);
+    double v = alpha * std::exp(-c * c / 2) * (c - 2 * m) + m * m + 1;
+
+    return NormalRandomVariable(m * sqrt_variance + mean_, v * variance_);
+}
+
+NormalRandomVariable NormalRandomVariable::truncateUpper(double upper) const
+{
+    return -(-(*this)).truncateLower(-upper);
+}
+
 NormalRandomVariable NormalRandomVariable::truncate(NormalRandomVariable lower, NormalRandomVariable upper) const
 {
     double sqrt_lower_variance = std::sqrt(lower.variance());

@@ -49,17 +49,27 @@ public:
     NormalRandomVariable truncate(double lower, double upper) const;
 
     /**
+     * Returns a truncated normal variable above the lower bound
+     */
+    NormalRandomVariable truncateLower(double lower) const;
+
+    /**
+     * Returns a truncated normal variable under the upper bound
+     */
+    NormalRandomVariable truncateUpper(double upper) const;
+
+    /**
      * Returns a truncated normal variable between the lower and upper bounds
      */
     NormalRandomVariable truncate(NormalRandomVariable lower, NormalRandomVariable upper) const;
 
     /**
-     * Returns a truncated normal variable above a lower bound
+     * Returns a truncated normal variable above the lower bound
      */
     NormalRandomVariable truncateLower(NormalRandomVariable lower) const;
 
     /**
-     * Returns a truncated normal variable under an upper bound
+     * Returns a truncated normal variable under the upper bound
      */
     NormalRandomVariable truncateUpper(NormalRandomVariable upper) const;
 
