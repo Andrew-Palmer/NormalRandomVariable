@@ -79,12 +79,12 @@ public:
     NormalRandomVariable truncateUpper(NormalRandomVariable upper) const;
 
     /** 
-     * Returns the maximum of itself and var
+     * Returns the maximum of itself and random_variable
      */
     NormalRandomVariable max(NormalRandomVariable random_variable) const;
 
     /** 
-     * Returns the minimum of itself and var
+     * Returns the minimum of itself and random_variable
      */
     NormalRandomVariable min(NormalRandomVariable random_variable) const;
 
@@ -136,7 +136,5 @@ NormalRandomVariable operator*(double num, const NormalRandomVariable& rv);
  * Multiplication of 2 random variables
  */
 NormalRandomVariable operator*(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2);
-
-
 
 } // namespace NRV
