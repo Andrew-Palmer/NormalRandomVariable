@@ -53,6 +53,16 @@ public:
      */
     NormalRandomVariable truncate(NormalRandomVariable lower, NormalRandomVariable upper) const;
 
+    /**
+     * Returns a truncated normal variable above a lower bound
+     */
+    NormalRandomVariable truncateLower(NormalRandomVariable lower) const;
+
+    /**
+     * Returns a truncated normal variable under an upper bound
+     */
+    NormalRandomVariable truncateUpper(NormalRandomVariable upper) const;
+
 
 private:
     double mean_;
@@ -72,6 +82,11 @@ NormalRandomVariable operator+(double num, const NormalRandomVariable& rv);
 NormalRandomVariable operator-(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2);
 NormalRandomVariable operator-(const NormalRandomVariable& rv, double num);
 NormalRandomVariable operator-(double num, const NormalRandomVariable& rv);
+
+/**
+ * Negation
+ */
+NormalRandomVariable operator-(const NormalRandomVariable& rv);
 
 /**
  * Division of random variable with a constant

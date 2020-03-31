@@ -141,36 +141,50 @@ NormalRandomVariable NormalRandomVariable::truncate(NormalRandomVariable lower, 
         if(sqrt_lower_variance > sqrt_upper_variance && delta < 0.316)
         {
             // Method 2 - lower first, then upper
-            NormalRandomVariable fake_constraint(std::numeric_limits<double>::max(), std::numeric_limits<double>::min());
-            NormalRandomVariable lower_applied = this->truncate(lower, fake_constraint);
-            fake_constraint = NormalRandomVariable(-std::numeric_limits<double>::max(), std::numeric_limits<double>::min());
-            return lower_applied.truncate(fake_constraint, upper);
+            NormalRandomVariable lower_applied = this->truncateLower(lower);
+            return lower_applied.truncateUpper(upper);
         }
         else
         {
             // Method 3 - upper first, then lower
-            NormalRandomVariable fake_constraint(-std::numeric_limits<double>::max(), std::numeric_limits<double>::min());
-            NormalRandomVariable upper_applied = this->truncate(fake_constraint, upper);
-            fake_constraint = NormalRandomVariable(std::numeric_limits<double>::max(), std::numeric_limits<double>::min());
-            return upper_applied.truncate(lower, fake_constraint);
+            NormalRandomVariable upper_applied = this->truncateUpper(upper);
+            return upper_applied.truncateLower(lower);
         }
     }
     else if(sqrt_upper_variance > sqrt_lower_variance && delta < 0.316)
     {
         // Method 3 - upper first, then lower
-        NormalRandomVariable fake_constraint(-std::numeric_limits<double>::max(), std::numeric_limits<double>::min());
-        NormalRandomVariable upper_applied = this->truncate(fake_constraint, upper);
-        fake_constraint = NormalRandomVariable(std::numeric_limits<double>::max(), std::numeric_limits<double>::min());
-        return upper_applied.truncate(lower, fake_constraint);
+        NormalRandomVariable upper_applied = this->truncateUpper(upper);
+        return upper_applied.truncateLower(lower);
     }
     else
     {
         // Method 2 - lower first, then upper
-        NormalRandomVariable fake_constraint(std::numeric_limits<double>::max(), std::numeric_limits<double>::min());
-        NormalRandomVariable lower_applied = this->truncate(lower, fake_constraint);
-        fake_constraint = NormalRandomVariable(-std::numeric_limits<double>::max(), std::numeric_limits<double>::min());
-        return lower_applied.truncate(fake_constraint, upper);
+        NormalRandomVariable lower_applied = this->truncateLower(lower);
+            return lower_applied.truncateUpper(upper);
     }
+}
+
+NormalRandomVariable NormalRandomVariable::truncateLower(NormalRandomVariable lower) const
+{
+    double sqrt_lower_variance = std::sqrt(lower.variance());
+    double sqrt_variance = std::sqrt(variance_);
+
+    // First transform the bounds to be acting on a standard normal distribution
+    double m_c = (lower.mean() - mean_) / sqrt_variance;
+    double v_c = lower.variance() / variance_;
+
+    double alpha = one_on_sqrt_two_pi / (1 - std::erf(m_c * one_on_sqrt_two / std::sqrt(v_c + 1)));
+    double m = 2 * alpha * (std::exp(- m_c * m_c / (2 * (v_c + 1))) / std::sqrt(v_c + 1));
+    double v = alpha * (sqrt_2_pi * ((1 + m * m) * (1 - std::erf(m_c * one_on_sqrt_two / std::sqrt(v_c + 1))))
+            + 2 * (m_c / (v_c + 1) - 2 * m) * std::exp(-m_c * m_c / (2 * (v_c + 1))) / std::sqrt(v_c + 1));
+
+    return NormalRandomVariable(m * sqrt_variance + mean_, v * variance_);
+}
+
+NormalRandomVariable NormalRandomVariable::truncateUpper(NormalRandomVariable upper) const
+{
+    return -(-(*this)).truncateLower(-upper);
 }
 
 NormalRandomVariable operator+(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2)
@@ -201,6 +215,11 @@ NormalRandomVariable operator-(const NormalRandomVariable& rv, double num)
 NormalRandomVariable operator-(double num, const NormalRandomVariable& rv)
 {
     return NormalRandomVariable(num - rv.mean(), rv.variance());
+}
+
+NormalRandomVariable operator-(const NormalRandomVariable& rv)
+{
+    return NormalRandomVariable(-rv.mean(), rv.variance());
 }
 
 NormalRandomVariable operator/(const NormalRandomVariable& rv, double num)
