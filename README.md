@@ -6,9 +6,9 @@ A class implementation of a normal random variable and various operations (under
     - Note: this operation will throw an exception if the mean of the random variable is less than 4 times the standard deviation
 - multiplication and division (with both normal random variables and constants)
     - Note: division of 2 random variables will throw an exception if the mean of the denominator is less than 4 times its standard deviation
-- rectification using either a lower bound of 0, or arbitrary lower and upper bounds
+- rectification using arbitrary lower and upper bounds
     - Rectifying a distribution groups the probability mass outside of the bounds at the respective bound
-- truncation using lower and upper bounds
+- truncation using arbitrary lower and upper bounds (where the bounds are either scalars or normally distributed random variables)
     - Truncating a distribution discards all probability mass outside the bounds
 
 Note: This implementation does not model covariance, and it is up to the user to ensure that the random variables, and equations of random variables, are independent. 
