@@ -70,20 +70,24 @@ NormalRandomVariable NormalRandomVariable::rectify(double lower, double upper) c
     return NormalRandomVariable(m * sqrt_variance + mean_, v * variance_);
 }
 
-NormalRandomVariable NormalRandomVariable::rectify() const
+NormalRandomVariable NormalRandomVariable::rectifyLower(double lower) const
 {
     double sqrt_variance = std::sqrt(variance_);
 
-    // Use only a lower bound of 0
-    double c = -mean_ / sqrt_variance;
+    double c = (lower - mean_) / sqrt_variance;
 
-    double m = one_on_sqrt_two_pi * (std::exp(-c * c / 2)) 
+    double m = one_on_sqrt_two_pi * std::exp(-c * c / 2) 
             + (c / 2) * (1 + std::erf(c * one_on_sqrt_two));
     double v = ((m * m + 1) / 2) * (1 - std::erf(c * one_on_sqrt_two))
-            - one_on_sqrt_two_pi * (-std::exp(-c * c / 2) * (c - 2 * m))
+            - one_on_sqrt_two_pi * -std::exp(-c * c / 2) * (c - 2 * m)
             + ((c - m) * (c - m) / 2) * (1 + std::erf(c * one_on_sqrt_two));
 
     return NormalRandomVariable(m * sqrt_variance + mean_, v * variance_);
+}
+
+NormalRandomVariable NormalRandomVariable::rectifyUpper(double upper) const
+{
+    return -(-(*this)).rectifyLower(-upper);
 }
 
 NormalRandomVariable NormalRandomVariable::truncate(double lower, double upper) const

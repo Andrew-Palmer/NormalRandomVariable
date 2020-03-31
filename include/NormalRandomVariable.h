@@ -37,11 +37,16 @@ public:
      * Returns a rectified normal variable between lower and upper bounds
      */
     NormalRandomVariable rectify(double lower, double upper) const;
-    
+
     /**
-     * Returns a rectified normal variable, rectified using a lower bound of 0
+     * Returns a rectified normal variable above the lower bound
      */
-    NormalRandomVariable rectify() const;
+    NormalRandomVariable rectifyLower(double lower) const;
+
+    /**
+     * Returns a rectified normal variable below the upper bound
+     */
+    NormalRandomVariable rectifyUpper(double upper) const;
 
     /**
      * Returns a truncated normal variable between the lower and upper bounds

@@ -351,7 +351,7 @@ TEST(Rectification, RectificationWithUpperAndLower)
 }
 
 template<class T>
-T rectify_zero(std::vector<T> inputs)
+T rectifyZero(std::vector<T> inputs)
 {
     // Use a lower bound of 0
     if(inputs[0] < 0)
@@ -367,16 +367,16 @@ TEST(Rectification, RectificationWithLowerZero)
     // Try far from the lower bound
     std::vector<NRV::NormalRandomVariable> inputs;
     inputs.push_back(NRV::NormalRandomVariable(10, 0.5));
-    auto calc_output = inputs[0].rectify();
-    auto sample_output = sampler(rectify_zero<double>, inputs, 1000000);
+    auto calc_output = inputs[0].rectifyLower(0);
+    auto sample_output = sampler(rectifyZero<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
 
     // Try close to the lower bound
     inputs[0] = NRV::NormalRandomVariable(0, 0.5);
-    calc_output = inputs[0].rectify();
-    sample_output = sampler(rectify_zero<double>, inputs, 1000000);
+    calc_output = inputs[0].rectifyLower(0);
+    sample_output = sampler(rectifyZero<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
@@ -526,7 +526,7 @@ TEST(Truncation, TruncationWithUpper)
 
 
 template<class T>
-T truncate_soft_bounds(std::vector<T> inputs)
+T truncateSoftBounds(std::vector<T> inputs)
 {
     if(inputs[0] < inputs[1])
     {
@@ -550,7 +550,7 @@ TEST(Truncation, TruncationWithUpperAndLowerSoftBounds)
     inputs.push_back(lower);
     inputs.push_back(upper);
     auto calc_output = inputs[0].truncate(lower, upper);
-    auto sample_output = sampler(truncate_soft_bounds<double>, inputs, 1000000);
+    auto sample_output = sampler(truncateSoftBounds<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
@@ -558,7 +558,7 @@ TEST(Truncation, TruncationWithUpperAndLowerSoftBounds)
     // Try close to the lower bound
     inputs[0] = NRV::NormalRandomVariable(0, 0.5);
     calc_output = inputs[0].truncate(lower, upper);
-    sample_output = sampler(truncate_soft_bounds<double>, inputs, 1000000);
+    sample_output = sampler(truncateSoftBounds<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
@@ -566,7 +566,7 @@ TEST(Truncation, TruncationWithUpperAndLowerSoftBounds)
     // Try close to both the upper and lower bounds
     inputs[0] = NRV::NormalRandomVariable(5, 10);
     calc_output = inputs[0].truncate(lower, upper);
-    sample_output = sampler(truncate_soft_bounds<double>, inputs, 1000000);
+    sample_output = sampler(truncateSoftBounds<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
@@ -579,14 +579,14 @@ TEST(Truncation, TruncationWithUpperAndLowerSoftBounds)
     inputs[2] = upper;
 
     calc_output = inputs[0].truncate(lower, upper);
-    sample_output = sampler(truncate_soft_bounds<double>, inputs, 1000000);
+    sample_output = sampler(truncateSoftBounds<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
 }
 
 template<class T>
-T truncate_soft_bounds_lower(std::vector<T> inputs)
+T truncateSoftBoundsLower(std::vector<T> inputs)
 {
     if(inputs[0] < inputs[1])
     {
@@ -604,7 +604,7 @@ TEST(Truncation, TruncationWithLowerSoftBounds)
     NRV::NormalRandomVariable lower(0, 1);
     inputs.push_back(lower);
     auto calc_output = inputs[0].truncateLower(lower);
-    auto sample_output = sampler(truncate_soft_bounds_lower<double>, inputs, 1000000);
+    auto sample_output = sampler(truncateSoftBoundsLower<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
@@ -612,7 +612,7 @@ TEST(Truncation, TruncationWithLowerSoftBounds)
     // Try at the lower bound
     inputs[0] = NRV::NormalRandomVariable(0, 0.5);
     calc_output = inputs[0].truncateLower(lower);
-    sample_output = sampler(truncate_soft_bounds_lower<double>, inputs, 1000000);
+    sample_output = sampler(truncateSoftBoundsLower<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
@@ -620,7 +620,7 @@ TEST(Truncation, TruncationWithLowerSoftBounds)
     // Try less than the lower bound
     inputs[0] = NRV::NormalRandomVariable(-2, 1);
     calc_output = inputs[0].truncateLower(lower);
-    sample_output = sampler(truncate_soft_bounds_lower<double>, inputs, 1000000);
+    sample_output = sampler(truncateSoftBoundsLower<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
@@ -628,7 +628,7 @@ TEST(Truncation, TruncationWithLowerSoftBounds)
 
 
 template<class T>
-T truncate_soft_bounds_upper(std::vector<T> inputs)
+T truncateSoftBoundsUpper(std::vector<T> inputs)
 {
     if(inputs[0] > inputs[1])
     {
@@ -646,7 +646,7 @@ TEST(Truncation, TruncationWithUpperSoftBounds)
     NRV::NormalRandomVariable upper(10, 1);
     inputs.push_back(upper);
     auto calc_output = inputs[0].truncateUpper(upper);
-    auto sample_output = sampler(truncate_soft_bounds_upper<double>, inputs, 1000000);
+    auto sample_output = sampler(truncateSoftBoundsUpper<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
@@ -654,7 +654,7 @@ TEST(Truncation, TruncationWithUpperSoftBounds)
     // Try far from the lower bound
     inputs[0] = NRV::NormalRandomVariable(0, 0.5);
     calc_output = inputs[0].truncateUpper(upper);
-    sample_output = sampler(truncate_soft_bounds_upper<double>, inputs, 1000000);
+    sample_output = sampler(truncateSoftBoundsUpper<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
@@ -663,7 +663,7 @@ TEST(Truncation, TruncationWithUpperSoftBounds)
     inputs[0] = NRV::NormalRandomVariable(12, 1);
 
     calc_output = inputs[0].truncateUpper(upper);
-    sample_output = sampler(truncate_soft_bounds_upper<double>, inputs, 1000000);
+    sample_output = sampler(truncateSoftBoundsUpper<double>, inputs, 1000000);
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
