@@ -700,3 +700,101 @@ TEST(Truncation, TruncationWithUpperSoftBounds)
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
 }
+
+template<class T>
+T maxOfVec(std::vector<T> inputs)
+{
+    T max_value = inputs[0];
+    for(auto input = inputs.begin() + 1; input != inputs.end(); ++input)
+    {
+        max_value = std::max(max_value, *input);
+    }
+
+    return max_value;
+}
+
+TEST(Max, MaxOf2)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(10, 0.5));
+    inputs.push_back(NRV::NormalRandomVariable(5, 2));
+    auto calc_output = inputs[0].max(inputs[1]);
+    auto sample_output = sampler(maxOfVec<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+
+    // Try closer together
+    inputs[1] = NRV::NormalRandomVariable(10, 0.5);
+    calc_output = inputs[0].max(inputs[1]);
+    sample_output = sampler(maxOfVec<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+}
+
+TEST(Max, MaxOf3)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(10, 4));
+    inputs.push_back(NRV::NormalRandomVariable(5, 2));
+    inputs.push_back(NRV::NormalRandomVariable(12, 4));
+    auto calc_output = inputs[0].max(inputs[1].max(inputs[2]));
+    auto sample_output = sampler(maxOfVec<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+}
+
+template<class T>
+T minOfVec(std::vector<T> inputs)
+{
+    T min_value = inputs[0];
+    for(auto input = inputs.begin() + 1; input != inputs.end(); ++input)
+    {
+        min_value = std::min(min_value, *input);
+    }
+
+    return min_value;
+}
+
+TEST(Min, MinOf2)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(10, 0.5));
+    inputs.push_back(NRV::NormalRandomVariable(5, 2));
+    auto calc_output = inputs[0].min(inputs[1]);
+    auto sample_output = sampler(minOfVec<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+
+    // Try closer together
+    inputs[1] = NRV::NormalRandomVariable(10, 0.5);
+    calc_output = inputs[0].min(inputs[1]);
+    sample_output = sampler(minOfVec<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+}
+
+TEST(Min, MinOf3)
+{
+    std::vector<NRV::NormalRandomVariable> inputs;
+    inputs.push_back(NRV::NormalRandomVariable(10, 4));
+    inputs.push_back(NRV::NormalRandomVariable(5, 2));
+    inputs.push_back(NRV::NormalRandomVariable(12, 4));
+    auto calc_output = inputs[0].min(inputs[1].min(inputs[2]));
+    auto sample_output = sampler(minOfVec<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+
+    // Try below the lower bound
+    inputs[0] = NRV::NormalRandomVariable(-2, 1);
+    calc_output = inputs[0].truncateLower(0);
+    sample_output = sampler(truncateLower<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+}

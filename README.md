@@ -10,6 +10,7 @@ A class implementation of a normal random variable and various operations (under
     - Rectifying a distribution groups the probability mass outside of the bounds at the respective bound
 - truncation using arbitrary lower and upper bounds (where the bounds are either scalars or normally distributed random variables)
     - Truncating a distribution discards all probability mass outside the bounds
+- maximum and minimum of two random variables
 
 Note: This implementation does not model covariance, and it is up to the user to ensure that the random variables, and equations of random variables, are independent. 
 
