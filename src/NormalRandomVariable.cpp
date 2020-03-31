@@ -210,6 +210,28 @@ NormalRandomVariable NormalRandomVariable::truncateUpper(NormalRandomVariable up
     return -(-(*this)).truncateLower(-upper);
 }
 
+NormalRandomVariable NormalRandomVariable::max(NormalRandomVariable random_variable) const
+{
+    double alpha = std::sqrt(variance_ + random_variable.variance());
+    double beta = (mean_ - random_variable.mean()) / alpha;
+
+    double phi_beta = 0.5 * (1 + std::erf(beta * one_on_sqrt_two));
+    double phi_neg_beta = 0.5 * (1 + std::erf(-beta * one_on_sqrt_two));
+    double alpha_phi_beta = alpha * one_on_sqrt_two_pi * std::exp(- beta * beta / 2);
+
+    double m = mean_ * phi_beta + random_variable.mean() * phi_neg_beta + alpha_phi_beta;
+    double v = (mean_ * mean_ + variance_) * phi_beta 
+            + (random_variable.mean() * random_variable.mean() + random_variable.variance()) * phi_neg_beta
+            + (mean_ + random_variable.mean()) * alpha_phi_beta - m * m;
+
+    return NormalRandomVariable(m, v);
+}
+
+NormalRandomVariable NormalRandomVariable::min(NormalRandomVariable random_variable) const
+{
+    return -((-(*this)).max(-random_variable));
+}
+
 NormalRandomVariable operator+(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2)
 {
     return NormalRandomVariable(rv1.mean() + rv2.mean(), rv1.variance() + rv2.variance());

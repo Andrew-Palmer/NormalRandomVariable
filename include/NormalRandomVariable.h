@@ -8,12 +8,12 @@ namespace NRV {
 class NormalRandomVariable {
 public:
     /**
-     * Constructor for a NRV with a standard normal distribution
+     * Constructor for a normally distributed random variable with a standard normal distribution
      */
     NormalRandomVariable();
 
     /**
-     * Constructor for a NRV with specified mean and variance
+     * Constructor for a normally distributed random variable with specified mean and variance
      * Note: Will throw an exception if variance is not greater than 0
      */
     NormalRandomVariable(double mean, double variance);
@@ -29,7 +29,7 @@ public:
     double variance() const;
 
     /**
-     * Calculates the inverse of the random variable (i.e., 1/x where x is the random variable)
+     * Calculates the inverse of the random variable (i.e., 1/X where X is the random variable)
      */
     NormalRandomVariable inverse() const;
 
@@ -78,6 +78,15 @@ public:
      */
     NormalRandomVariable truncateUpper(NormalRandomVariable upper) const;
 
+    /** 
+     * Returns the maximum of itself and var
+     */
+    NormalRandomVariable max(NormalRandomVariable random_variable) const;
+
+    /** 
+     * Returns the minimum of itself and var
+     */
+    NormalRandomVariable min(NormalRandomVariable random_variable) const;
 
 private:
     double mean_;
@@ -127,5 +136,7 @@ NormalRandomVariable operator*(double num, const NormalRandomVariable& rv);
  * Multiplication of 2 random variables
  */
 NormalRandomVariable operator*(const NormalRandomVariable& rv1, const NormalRandomVariable& rv2);
+
+
 
 } // namespace NRV
