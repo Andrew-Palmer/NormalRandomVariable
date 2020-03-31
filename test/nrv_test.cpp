@@ -789,4 +789,12 @@ TEST(Min, MinOf3)
     
     EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
     EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
+
+    // Try below the lower bound
+    inputs[0] = NRV::NormalRandomVariable(-2, 1);
+    calc_output = inputs[0].truncateLower(0);
+    sample_output = sampler(truncateLower<double>, inputs, 1000000);
+    
+    EXPECT_NEAR(calc_output.mean(), sample_output.mean(), 0.02); 
+    EXPECT_NEAR(calc_output.variance(), sample_output.variance(), 0.02); 
 }
