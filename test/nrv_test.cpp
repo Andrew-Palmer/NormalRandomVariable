@@ -5,7 +5,7 @@
 #include <numeric>
 #include <functional>
 
-#include "NormalRandomVariable.h"
+#include "NormalRandomVariable/NormalRandomVariable.h"
 
 /**
  * Samples from the normal random variables and runs them through func number_of_samples times in order

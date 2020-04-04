@@ -2,7 +2,7 @@
 #include <cmath>
 #include <limits>
 
-#include "NormalRandomVariable.h"
+#include "NormalRandomVariable/NormalRandomVariable.h"
 
 
 namespace NRV {
@@ -190,7 +190,6 @@ NormalRandomVariable NormalRandomVariable::truncate(NormalRandomVariable lower, 
 
 NormalRandomVariable NormalRandomVariable::truncateLower(NormalRandomVariable lower) const
 {
-    double sqrt_lower_variance = std::sqrt(lower.variance());
     double sqrt_variance = std::sqrt(variance_);
 
     // First transform the bounds to be acting on a standard normal distribution
