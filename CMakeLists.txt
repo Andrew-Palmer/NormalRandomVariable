@@ -35,6 +35,5 @@ endif(BUILD_TESTS)
 ########################################################################################
 # Installation
 
-#include(GNUInstallDirs)
-
-#install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(TARGETS NormalRandomVariable DESTINATION /usr/local/lib)
+install(FILES include/NormalRandomVariable/NormalRandomVariable.h DESTINATION /usr/local/include)
