@@ -42,6 +42,16 @@ Enable testing when building and run the test
     make
     make test ARGS="-V"
 
+## Installation
+
+The library can be installed after it has been built using:
+
+    sudo make install
+
+## Example
+
+A usage example is provided in the `example` folder. 
+
 ## References
 
 The approximations used for the various operations are presented in the following papers:
