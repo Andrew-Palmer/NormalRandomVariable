@@ -35,5 +35,21 @@ endif(BUILD_TESTS)
 ########################################################################################
 # Installation
 
-install(TARGETS NormalRandomVariable DESTINATION /usr/local/lib)
+install(TARGETS NormalRandomVariable DESTINATION /usr/local/lib EXPORT NormalRandomVariableTargets)
 install(FILES include/NormalRandomVariable/NormalRandomVariable.h DESTINATION /usr/local/include)
+install(EXPORT NormalRandomVariableTargets FILE NormalRandomVariableTargets.cmake DESTINATION /usr/local/lib/cmake/NormalRandomVariable)
+
+include(CMakePackageConfigHelpers)
+# generate the config file that is includes the exports
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/NormalRandomVariableConfig.cmake"
+  INSTALL_DESTINATION "/usr/local/lib/cmake/NormalRandomVariable"
+  NO_SET_AND_CHECK_MACRO
+  NO_CHECK_REQUIRED_COMPONENTS_MACRO
+  )
+
+# install the configuration file
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/NormalRandomVariableConfig.cmake
+  DESTINATION /usr/local/lib/cmake/NormalRandomVariable
+  )
