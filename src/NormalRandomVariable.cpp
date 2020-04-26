@@ -54,6 +54,11 @@ NormalRandomVariable NormalRandomVariable::inverse() const
 
 NormalRandomVariable NormalRandomVariable::rectify(double lower, double upper) const
 {
+   if(upper <= lower)
+    {
+        throw std::range_error("NormalRandomVariable: Rectification lower bound must be less than upper bound");
+    }
+
     double sqrt_variance = std::sqrt(variance_);
 
     double c = (lower - mean_) / sqrt_variance;
