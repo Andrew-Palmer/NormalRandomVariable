@@ -3,14 +3,15 @@
 #include <random>
 #include <cmath>
 #include <numeric>
+#include <functional>
 
-#include "NormalRandomVariable.h"
+#include "NormalRandomVariable/NormalRandomVariable.h"
 
 /**
- * Samples from the normal random variables and runs them through function number_of_samples times in order
+ * Samples from the normal random variables and runs them through func number_of_samples times in order
  * to estimate the resultant distribution
  */
-NRV::NormalRandomVariable sampler(double (*function)(std::vector<double>), std::vector<NRV::NormalRandomVariable> inputs, unsigned int number_of_samples)
+NRV::NormalRandomVariable sampler(std::function<double(std::vector<double>)> func, std::vector<NRV::NormalRandomVariable> inputs, unsigned int number_of_samples)
 {
     // Set up the random number generator and store the distributions for each random variable
     std::default_random_engine generator;
@@ -33,7 +34,7 @@ NRV::NormalRandomVariable sampler(double (*function)(std::vector<double>), std::
         // Use a try-catch block to handle cases where the function should not actually return a result
         try
         {
-            results.push_back(function(inputs_sampled));
+            results.push_back(func(inputs_sampled));
         }
         catch (...)
         {
