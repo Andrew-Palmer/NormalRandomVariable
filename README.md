@@ -1,6 +1,6 @@
 # About NormalRandomVariable
 
-A class implementation of a normal random variable and various operations (under the assumption that they are independent). The operations that are implemented are:
+A class implementation of a normal random variable and various operations (under the assumption that the normal random variables are independent). The operations that are implemented are:
 
 - Addition and subtraction (with both normal random variables and constants)
 - Inverse of a normal random variable
@@ -14,6 +14,8 @@ A class implementation of a normal random variable and various operations (under
     - Truncating a distribution discards all probability mass outside the bounds. This can be used to calculate the conditional probability distribution p(A | lower < A < upper), where lower and upper can be either scalars or normally distributed random variables. 
     - Note: this operation will throw an exception if the bounds are scalars and the lower bound is not less than the upper bound
 - Maximum and minimum of two random variables
+
+With the exception of additon and subtraction, the output of these operations is a normal random variable approximation of the result. For derivations of the approximations, see the papers listed under **References**. 
 
 Note: This implementation does not model covariance, and it is up to the user to ensure that the random variables, and equations of random variables, are independent. 
 
